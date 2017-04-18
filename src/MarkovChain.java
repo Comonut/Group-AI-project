@@ -91,11 +91,13 @@ public class MarkovChain <E>{
 	public ArrayList<E> generateSequence(){
 		
 		E current = start;
+
+
 		ArrayList<E> sequence = new ArrayList<E>();
 		
 		
 		while(true){
-			
+
 			current = getNext(current);
 			if(current.equals(end)) break;
 			else sequence.add(current);

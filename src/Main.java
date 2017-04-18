@@ -14,10 +14,19 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		Integer[] w = {-1,1,2,1,2,-2};
-		
-		MarkovChain<Integer> chain = new MarkovChain<Integer>(w);
-		System.out.println(chain.generateSequence());
+		Character[] sequence = {'s','1','2','2','2','2','1','1','e'};
+
+
+		SecondMarkovChain<Character> markov= new SecondMarkovChain<>(sequence);
+
+		System.out.println("Chain tree: ");
+		markov.print();
+
+		System.out.println("Example sequences:");
+        for(int q = 0; q < 10; q++){
+            System.out.println(markov.generateSequence());
+        }
+
 	}
 
 }

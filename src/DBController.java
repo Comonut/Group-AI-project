@@ -17,6 +17,9 @@ public class DBController {
     private final Connection CONN;
     private final Statement STMT;
     private final HashMap<String, String[]> HEAD;
+    public static final int NOTE_ON = 0x90;
+    public static final int NOTE_OFF = 0x80;
+    public static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
     
     /**
      * Constructor.
@@ -46,7 +49,7 @@ public class DBController {
     /**
      * Database querier. Send all queries with results here.
      * @param queryString The query string
-     * @param types //Return types and names. even positions hold types where odd positions hold name. They are paired respectively.
+     * @param types Return types and names. even positions hold types where odd positions hold name. They are paired respectively.
      * @return An ArrayList contains a list of HashMap. Values need to be casted before use.
      * @throws SQLException THROW
      */
@@ -212,18 +215,19 @@ public class DBController {
      * Get the upcoming notes by the notes given.
      * @param notes The notes given. Format: Notes divided by ;. There must be a ; at the end. Exmaple: 1,1,3,3.0;2,5,2,1.0;
      * @param count The count of notes looking after the notes given.
+     * @param profile The profile which want to look at
      * @return The notes set which has the most time appear.
      * @throws SQLException THROW
      */
-    public String getUpcoming(String notes, int count) throws SQLException {
+    public String getUpcoming(String notes, int count, int profile) throws SQLException {
         String post = new String(new char[count]).replace("\0", "_,_,_,_._;");
         HashMap<String, Integer> stats = new HashMap<>();
-        ArrayList<HashMap<String, Object>> result = query("SELECT \"Notes\" FROM \"main\".\"Sample\" WHERE \"Notes\" LIKE '" + notes + post + "'", new String[]{"text", "Notes"});
+        ArrayList<HashMap<String, Object>> result = query("SELECT \"Notes\" FROM \"main\".\"Sample\" WHERE \"Notes\" LIKE '%" + notes + post + "%' AND \"Profile\" = " + profile, new String[]{"text", "Notes"});
         for(int i = 0; i < result.size(); i++) {
             String item = (String)result.get(i).get("Notes");
             for (int j = -1; (j = item.indexOf(notes, j + 1)) != -1; ) {
-                if(j + 10 * (count + 1) < item.length() + 1); {
-                    String find = item.substring(j + 10, j + 10 * (count + 1));
+                if(j + notes.length() + 10 * count < item.length() + 1) {
+                    String find = item.substring(j + notes.length(), j + notes.length() + 10 * count);
                     if(stats.containsKey(find)) {
                         stats.put(find, stats.get(find) + 1);
                     } else {

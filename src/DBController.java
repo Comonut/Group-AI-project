@@ -17,9 +17,6 @@ public class DBController {
     private final Connection CONN;
     private final Statement STMT;
     private final HashMap<String, String[]> HEAD;
-    public static final int NOTE_ON = 0x90;
-    public static final int NOTE_OFF = 0x80;
-    public static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
     
     /**
      * Constructor.
@@ -221,6 +218,7 @@ public class DBController {
      */
     public String getUpcoming(String notes, int count, int profile) throws SQLException {
         String post = new String(new char[count]).replace("\0", "_,_,_,_._;");
+        
         HashMap<String, Integer> stats = new HashMap<>();
         ArrayList<HashMap<String, Object>> result = query("SELECT \"Notes\" FROM \"main\".\"Sample\" WHERE \"Notes\" LIKE '%" + notes + post + "%' AND \"Profile\" = " + profile, new String[]{"text", "Notes"});
         for(int i = 0; i < result.size(); i++) {

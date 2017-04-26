@@ -83,11 +83,25 @@ public class DBController {
      * @throws IOException THROW
      */
     private String sqlReader(String fn) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader("sql/" + fn + ".sql"));
+        return fileReader("sql/" + fn + ".sql", true);
+    }
+    
+    /**
+    * File Reader
+    * @param fn File name
+    * @param seperate Seperate the line or not
+    * @return The content of the file.
+    * @throws IOException THROW
+    */
+    private String fileReader(String fn, boolean seperate) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(fn));
         StringBuilder sb = new StringBuilder();
         String line = br.readLine();
         while(line != null) {
-            sb.append(line).append(System.lineSeparator());
+            sb.append(line);
+            if(seperate) {
+                sb.append(System.lineSeparator());
+            }
             line = br.readLine();
         }
         return sb.toString();
@@ -218,7 +232,6 @@ public class DBController {
      */
     public String getUpcoming(String notes, int count, int profile) throws SQLException {
         String post = new String(new char[count]).replace("\0", "_,_,_,_._;");
-        
         HashMap<String, Integer> stats = new HashMap<>();
         ArrayList<HashMap<String, Object>> result = query("SELECT \"Notes\" FROM \"main\".\"Sample\" WHERE \"Notes\" LIKE '%" + notes + post + "%' AND \"Profile\" = " + profile, new String[]{"text", "Notes"});
         for(int i = 0; i < result.size(); i++) {
@@ -245,5 +258,18 @@ public class DBController {
         } else {
             return maxEntry.getKey();
         }
+    }
+    
+    /**
+     * Insert a sample file to the database.
+     * @param fn The file name
+     * @param name The name of the sample
+     * @param profile The id of the profile
+     * @param notes The notes set
+     * @param source The source, 0 means from file while 1 means MIDI keyboard.
+     * @throws SQLException THROW
+     */
+    public void sampleReader(String fn, String name, int profile, String notes, int source) throws IOException, SQLException {
+        createSample(name, profile, fileReader(fn, false), source);
     }
 }

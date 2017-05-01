@@ -1,4 +1,4 @@
-package paino;
+
 
 /* This classes read in notes from a midi keyboard and outputs them into a string "sequence"
  * sources: 

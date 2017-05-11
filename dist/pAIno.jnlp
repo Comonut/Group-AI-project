@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="pAIno.jnlp">
+  <information>
+    <title>pAIno</title>
+    <vendor>u5ch</vendor>
+    <description>null</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="lib/sqlite-jdbc-3.16.1.jar" size="6161579" download="eager" />
+    <jar href="pAIno.jar" size="34753" download="eager" />
+  </resources>
+  <application-desc main-class="paino.PAIno"  name="pAIno" >
+  </application-desc>
+  <update check="always"/>
+</jnlp>
